@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import {
   advance,
   beginIntro,
@@ -202,6 +202,19 @@ export function WorkoutApp() {
     },
   };
 
+  const pressStamp = useRef(0);
+  const press = (run: () => void) => ({
+    onPointerUp: (event: ReactPointerEvent<HTMLButtonElement>) => {
+      if (event.button !== 0) return;
+      pressStamp.current = performance.now();
+      run();
+    },
+    onClick: () => {
+      if (performance.now() - pressStamp.current < 700) return;
+      run();
+    },
+  });
+
   const publish = useCallback(() => {
     setView(snapshot(sim.current));
   }, []);
@@ -266,18 +279,24 @@ export function WorkoutApp() {
   useEffect(() => {
     let raf = 0;
     let last = performance.now();
-    let published = 0;
     let dead = false;
+    let mark = "";
     const loop = (now: number) => {
       if (dead) return;
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       const current = sim.current;
-      const mark = `${current.phase}|${current.index}|${current.running}|${current.banner?.text ?? ""}`;
       advance(current, dt, LEVELS[current.levelId], hooksRef.current!);
-      const next = `${current.phase}|${current.index}|${current.running}|${current.banner?.text ?? ""}`;
-      if (next !== mark || now - published > 50) {
-        published = now;
+      const level = LEVELS[current.levelId];
+      const action = actionOf(current, level);
+      const frame = frameIndex(action, current);
+      const remain = Math.ceil(remainOf(current, level) - 1e-6);
+      const clock = Math.floor(clockOf(current) + 1e-6);
+      const pop = popOf(current, level) ?? 0;
+      const motion = current.phase === "outro" ? Math.floor(current.phaseElapsed * 20) : 0;
+      const next = `${current.phase}|${current.index}|${current.running}|${current.levelId}|${action}|${current.banner?.text ?? ""}|${frame}|${remain}|${clock}|${pop}|${frameOf(current)}|${motion}`;
+      if (next !== mark) {
+        mark = next;
         setView(snapshot(current));
       }
       raf = requestAnimationFrame(loop);
@@ -474,39 +493,41 @@ export function WorkoutApp() {
             </option>
           ))}
         </select>
-        <button type="button" className={view.running ? undefined : "primary"} onClick={onStart}>
+        <button type="button" className={view.running ? undefined : "primary"} {...press(onStart)}>
           {view.running ? "Pause" : "Start"}
         </button>
-        <button type="button" onClick={onReset}>
+        <button type="button" {...press(onReset)}>
           Reset
         </button>
-        <button type="button" aria-label="Skip interval" onClick={onSkip}>
+        <button type="button" aria-label="Skip interval" {...press(onSkip)}>
           Skip
         </button>
         <button
           type="button"
           aria-pressed={sfxOn}
-          onClick={() => {
+          aria-label={sfxOn ? "Sound effects on" : "Sound effects off"}
+          {...press(() => {
             const next = !sfxOn;
             setSfxOn(next);
             setSfxEnabled(next);
             localStorage.setItem("5bx-sfx", next ? "1" : "0");
             if (next) unlockAudio();
-          }}
+          })}
         >
-          SFX: {sfxOn ? "ON" : "OFF"}
+          SFX {sfxOn ? "ON" : "OFF"}
         </button>
         <button
           type="button"
           aria-pressed={voiceOn}
-          onClick={() => {
+          aria-label={voiceOn ? "Voice on" : "Voice off"}
+          {...press(() => {
             const next = !voiceOn;
             setVoiceOn(next);
             setVoiceEnabled(next);
             localStorage.setItem("5bx-voice", next ? "1" : "0");
-          }}
+          })}
         >
-          Voice: {voiceOn ? "ON" : "OFF"}
+          Voice {voiceOn ? "ON" : "OFF"}
         </button>
       </nav>
     </main>

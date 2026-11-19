@@ -1,0 +1,1 @@
+HD redraw of existing 5BX cadet (blue tank, red shorts) on magenta, not 16-bit pixel. Cell target 256.
