@@ -3,52 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>5BX cadet run</title>
+    <title>5BX exercise films</title>
     <style>
-      html,
-      body {
-        margin: 0;
-        min-height: 100%;
-        background: #101418;
-        color: #f6e7c1;
-        font-family: "Oswald", Impact, sans-serif;
-      }
-      main {
-        min-height: 100dvh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-        padding: 1rem;
-        box-sizing: border-box;
-      }
-      h1 {
-        margin: 0;
-        font-size: 1.4rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-      video {
-        width: min(100%, 960px);
-        max-height: 78dvh;
-        background: #000;
-      }
-      a {
-        color: #f6e7c1;
-      }
+      html, body { margin: 0; background: #101418; color: #f6e7c1; font-family: "Oswald", Impact, sans-serif; }
+      main { max-width: 960px; margin: 0 auto; padding: 1rem 1rem 3rem; }
+      h1 { letter-spacing: 0.08em; text-transform: uppercase; font-size: 1.4rem; }
+      a { color: #d9822b; }
+      section { margin: 1.5rem 0; }
+      h2 { margin: 0 0 0.4rem; font-size: 1.1rem; letter-spacing: 0.06em; }
+      video { width: 100%; background: #000; }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap"
-    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap" />
   </head>
   <body>
     <main>
-      <h1>Cadet run</h1>
-      <video src="cadet-run.mp4" controls playsinline loop></video>
-      <a href="../">Back to the timer</a>
+      <p><a href="../">Back to the timer</a></p>
+      <h1>Chart 1 films</h1>
+      <section><h2>1. Toe touches</h2><video src="toe.mp4" controls playsinline loop></video></section>
+      <section><h2>2. Sit-ups</h2><video src="situp.mp4" controls playsinline loop></video></section>
+      <section><h2>3. Back extensions</h2><video src="back.mp4" controls playsinline loop></video></section>
+      <section><h2>4. Knee push-ups</h2><video src="pushup.mp4" controls playsinline loop></video></section>
+      <section><h2>5. Stationary run</h2><video src="run.mp4" controls playsinline loop></video></section>
+      <section><h2>Scissor jumps</h2><video src="scissor.mp4" controls playsinline loop></video></section>
     </main>
   </body>
 </html>

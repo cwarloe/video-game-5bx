@@ -105,6 +105,14 @@ function nextOf(sim: Sim, level: Level): Exercise | null {
   return null;
 }
 
+function filmFor(action: Action, phase: Phase): string | null {
+  if (phase !== "work") return null;
+  if (action === "toe" || action === "situp" || action === "back" || action === "pushup" || action === "run" || action === "scissor") {
+    return `${action}.mp4`;
+  }
+  return null;
+}
+
 function athleteMotion(phase: Phase, elapsed: number): string {
   if (phase !== "outro" && phase !== "done") return "none";
   const t = phase === "done" ? OUTRO_SECONDS : elapsed;
@@ -384,31 +392,47 @@ export function WorkoutApp() {
     publish();
   };
 
+  const film = filmFor(action, view.phase);
+
   return (
     <main className="shell" data-frame={frameOf(view)} data-phase={view.phase} data-interval={view.index + 1}>
       <p className="sr-only" aria-live="polite">
         {status}
       </p>
       <section className={shaking ? "stage shake" : "stage"} aria-label="Workout stage">
-        <div className="sky" />
-        <div className="sun" aria-hidden />
-        <div className="ground" />
-        <Pines />
-        <div
-          className="contact-shadow"
-          style={{ transform: `translateX(-50%) scaleX(${shadow.toFixed(3)})`, opacity: Math.max(0.12, shadow) }}
-          aria-hidden
-        />
-        <div className={action === "crash" ? "athlete splat" : "athlete"}>
-          <div className="athlete-motion" style={{ transform: athleteMotion(view.phase, view.phaseElapsed) }}>
-            <img
-              src={spriteSrc(action, frameIndex(action, view))}
-              alt=""
-              className={view.phase === "idle" || view.phase === "intro" ? "ghost" : undefined}
-              draggable={false}
+        {film ? (
+          <video
+            key={film}
+            className="exercise-film"
+            src={`${import.meta.env.BASE_URL}video/${film}`}
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        ) : (
+          <>
+            <div className="sky" />
+            <div className="sun" aria-hidden />
+            <div className="ground" />
+            <Pines />
+            <div
+              className="contact-shadow"
+              style={{ transform: `translateX(-50%) scaleX(${shadow.toFixed(3)})`, opacity: Math.max(0.12, shadow) }}
+              aria-hidden
             />
-          </div>
-        </div>
+            <div className={action === "crash" ? "athlete splat" : "athlete"}>
+              <div className="athlete-motion" style={{ transform: athleteMotion(view.phase, view.phaseElapsed) }}>
+                <img
+                  src={spriteSrc(action, frameIndex(action, view))}
+                  alt=""
+                  className={view.phase === "idle" || view.phase === "intro" ? "ghost" : undefined}
+                  draggable={false}
+                />
+              </div>
+            </div>
+          </>
+        )}
 
         <header className="hud-top">
           {view.phase === "idle" || view.phase === "intro" ? (
@@ -479,7 +503,7 @@ export function WorkoutApp() {
       </section>
 
       <a className="film-link" href={`${import.meta.env.BASE_URL}video/`}>
-        Run film
+        Exercise films
       </a>
 
       <nav className="controls" aria-label="Workout controls">
