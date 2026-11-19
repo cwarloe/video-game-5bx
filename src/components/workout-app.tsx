@@ -106,11 +106,19 @@ function nextOf(sim: Sim, level: Level): Exercise | null {
 }
 
 function filmFor(action: Action, phase: Phase): string | null {
-  if (phase !== "work") return null;
-  if (action === "toe" || action === "situp" || action === "back" || action === "pushup" || action === "run" || action === "scissor") {
+  if (phase === "outro" || phase === "done") return null;
+  if (phase === "idle" || phase === "intro") return "toe.mp4";
+  if (
+    action === "toe" ||
+    action === "situp" ||
+    action === "back" ||
+    action === "pushup" ||
+    action === "run" ||
+    action === "scissor"
+  ) {
     return `${action}.mp4`;
   }
-  return null;
+  return "toe.mp4";
 }
 
 function athleteMotion(phase: Phase, elapsed: number): string {
@@ -393,6 +401,14 @@ export function WorkoutApp() {
   };
 
   const film = filmFor(action, view.phase);
+  const filmRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const node = filmRef.current;
+    if (!node) return;
+    node.muted = true;
+    void node.play().catch(() => {});
+  }, [film]);
 
   return (
     <main className="shell" data-frame={frameOf(view)} data-phase={view.phase} data-interval={view.index + 1}>
@@ -403,6 +419,7 @@ export function WorkoutApp() {
         {film ? (
           <video
             key={film}
+            ref={filmRef}
             className="exercise-film"
             src={`${import.meta.env.BASE_URL}video/${film}`}
             autoPlay
