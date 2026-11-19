@@ -478,6 +478,10 @@ export function WorkoutApp() {
         </footer>
       </section>
 
+      <a className="film-link" href={`${import.meta.env.BASE_URL}video/`}>
+        Run film
+      </a>
+
       <nav className="controls" aria-label="Workout controls">
         <select
           aria-label="Level"
