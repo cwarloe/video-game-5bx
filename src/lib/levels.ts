@@ -85,7 +85,8 @@ export const FRAME_COUNTS: Record<Action, number> = {
 };
 
 export function spriteSrc(action: Action, frame: number): string {
-  return `/sprites/${action}/${frame}.png`;
+  const base = import.meta.env.BASE_URL || "/";
+  return `${base}sprites/${action}/${frame}.png`;
 }
 
 export function formatRemain(seconds: number): string {
