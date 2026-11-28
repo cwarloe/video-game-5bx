@@ -1,0 +1,2 @@
+> **Retired: everything 5BX now lives in [cwarloe/5BX](https://github.com/cwarloe/5BX).** The game is in [`game/`](https://github.com/cwarloe/5BX/tree/main/game). This repo's raw art (the cadet video-to-sprite pipeline, the exercise film clips, the padded Chart 1 sprites and the Nov 24 corrected Chart 1 cadet frames) is in the Google Drive folder *Sprite Art 5BX Workout*; see [`ART.md`](https://github.com/cwarloe/5BX/blob/main/ART.md). This repository is archived and read-only.
+
